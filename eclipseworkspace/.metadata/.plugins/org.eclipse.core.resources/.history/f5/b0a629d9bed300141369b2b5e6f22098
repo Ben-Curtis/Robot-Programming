@@ -1,0 +1,83 @@
+// Minimal class for a particular implementation of directed graphs.
+// All we include is what is necessary to build a graph, in the class
+// graph.
+package graphsearch;
+
+import java.util.Set;
+/**
+ * A class to hold Node objects
+ */
+public class Node<A> implements Comparable<Node<A>> {
+
+	private A contents;
+	// Keep the implementation of sets open, by using the Set interface:
+	private Set<Node<A>> successors;
+	public Integer value;
+
+	/**
+	 * A constructor to create a new node - we can only build a node with an initially empty set of successors
+	 * @param contents The contents of the node - which is the coordinates of the node
+	 * 
+	 */
+	public Node(A contents) {
+		this.contents = contents;
+		// Choose any implementatAion of sets you please, but you need to
+		// choose one.
+		this.successors = new HashSet<Node<A>>();
+	}
+
+	/**
+	 * Method to add successors to a node
+	 * @param s The successor to add to the node
+	 */
+	public void addSuccessor(Node<A> s) {
+		successors.add(s);
+	}
+
+	/**
+	 * A method to test whether contents is equal to that stored for a particular node
+	 * @param c The contents you are testing
+	 * @return boolean Either true or false
+	 */
+	public boolean contentsEquals(A c) {
+		return contents.equals(c);
+	}
+
+	/**
+	 * Get method to return the contents of a node
+	 * @return contents The content of a node
+	 */
+	public A contents() {
+		return contents;
+	}
+
+	/**
+	 * Get method to return the successors of a node
+	 * @return successors The successors of a node
+	 */
+	public Set<Node<A>> successors() {
+		return successors;
+	}
+	
+	/**
+	 * toSting method
+	 * @return string Returns a string of the contents
+	 */
+	public String toString(){
+		return contents.toString();
+		
+	}
+	
+	public void setValue(Integer value){
+		this.value = value;
+	}
+	
+	public Integer getValue(){
+		return value;
+	}
+	
+	@Override
+	public int compareTo(Node<A> o) {
+		return value.compareTo(o.getValue());
+	}
+}

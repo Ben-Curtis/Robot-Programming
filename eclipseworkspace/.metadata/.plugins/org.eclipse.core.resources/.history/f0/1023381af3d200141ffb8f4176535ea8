@@ -1,0 +1,152 @@
+package mapstuff;
+
+import maybe.Just;
+import maybe.Maybe;
+import maybe.Nothing;
+
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+import graphsearch.AStar;
+import graphsearch.Coordinate;
+import graphsearch.Distance;
+import graphsearch.Heuristic;
+import graphsearch.Node;
+import ilist.IList;
+
+import java.util.ArrayList;
+import java.util.Random;
+
+import rp.robotics.mapping.MapUtils;
+import rp.robotics.mapping.RPLineMap;
+
+
+public class GraphTest {
+	
+	public GraphTest() {
+		
+	}
+	
+	
+	@Test
+	public void testPathFind() {
+		
+		RPLineMap lineMap = MapUtils.create2015Map1();
+		gridMap gridMap = new gridMap(8, 12, 15, 15, 30, lineMap);
+
+		Graph<Coordinate> graph = new Graph<Coordinate>(lineMap, gridMap);
+		ArrayList<Coordinate> coords = graph.createCoordinates();
+		//System.out.println(coords.size());
+		ArrayList<Node<Coordinate>> nodes = graph.createNodes(coords);
+		
+		for (int i = 0; i < nodes.size(); i++) {
+			Node<Coordinate> n = (Node<Coordinate>) nodes.get(i);
+			Coordinate c = n.contents();
+			int x1 = ((Coordinate) c).getX();
+			int y1 = ((Coordinate) c).getY();
+			//System.out.println(x1 +", " +y1);
+			int x2 = x1 + 1;
+			int y2 = y1 + 1;
+			
+			int x3 = x1 - 1;
+			int y3 = y1 - 1;
+			
+			if (gridMap.isValidTransition(x1, y1, x1, y2) == true) {
+				Coordinate p = new Coordinate (x1, y2);
+				Node<Coordinate> s = graph.nodeWith(p);
+				n.addSuccessor(s);
+			}
+			
+			if (gridMap.isValidTransition(x1, y1, x2, y1) == true) {
+				Coordinate p = new Coordinate (x2, y1);
+				Node<Coordinate> s = graph.nodeWith(p);
+				n.addSuccessor(s);
+			}
+
+			if (gridMap.isValidTransition(x1, y1, x1, y3) == true) {
+				Coordinate p = new Coordinate (x1, y3);
+				Node<Coordinate> s = graph.nodeWith(p);
+				n.addSuccessor(s);
+			}
+			
+			if (gridMap.isValidTransition(x1, y1, x3, y1) == true) {
+				Coordinate p = new Coordinate (x3, y1);
+				Node<Coordinate> s = graph.nodeWith(p);
+				n.addSuccessor(s);
+			}
+		}
+		
+		for(int i = 0 ; i < 10; i++) {
+			
+			Random r = new Random();
+			
+			int x1 = r.nextInt(12);
+			int y1 = r.nextInt(8);
+			int x2 = r.nextInt(12);
+			int y2 = r.nextInt(8);
+			
+			AStar<Coordinate> astar = new AStar<Coordinate>();
+			
+			Node<Coordinate> startNode = graph.nodeWith(new Coordinate(x1, y1));
+			
+			while (gridMap.isObstructed(x1, y1) == true) {
+				System.out.println("stuck2");
+				x1 = r.nextInt(12);
+				System.out.println(x1);
+				y1 = r.nextInt(8);
+				System.out.println(y1);
+				startNode = graph.nodeWith(new Coordinate(x1,y1));
+			}
+			
+			Node<Coordinate> findNode = graph.nodeWith(new Coordinate(x2, y2));
+			
+			while (gridMap.isObstructed(x2, y2) == true) {
+				System.out.println("stuck2");
+				x2 = r.nextInt(12);
+				System.out.println(x2);
+				y2 = r.nextInt(8);
+				System.out.println(y2);
+				findNode = graph.nodeWith(new Coordinate(x2,y2));
+				
+			}
+			
+			
+			Heuristic<Coordinate> h = new Heuristic<Coordinate>(startNode, findNode);
+			Distance<Coordinate> d = new Distance<Coordinate>(startNode, findNode);
+
+			Maybe<IList<Node<Coordinate>>> path = astar.findPathFrom(startNode, findNode, h, d);
+						
+			IList<Node<Coordinate>> path2 = path.fromMaybe();
+
+			Assert.assertTrue(gridMap.isValidTransition(x1, y1, x1, y1));
+				
+			Maybe<Node<Coordinate>> b = path2.getHead();
+				
+				
+			Assert.assertTrue(b.has(startNode));
+
+			Assert.assertFalse(gridMap.isObstructed(x1, y1));
+			Assert.assertFalse(gridMap.isObstructed(x2, y2));
+
+//			boolean t = false;
+//			
+//			String k = path.toString();
+//			
+//			if (k.equals("Nothing")) {
+//				t = true;
+//			}
+//			
+//			System.out.println(path);
+//			
+//			if (gridMap.isObstructed(x1,y1)) {
+//				Assert.assertTrue(gridMap.isObstructed(x1, y1));
+//				Assert.assertTrue(t);
+//			}
+//			else if (gridMap.isObstructed(x2,y2)) {
+//				Assert.assertTrue(gridMap.isObstructed(x2, y2));
+//				Assert.assertTrue(t);
+//			}						
+		}
+	}
+	
+}

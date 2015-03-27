@@ -1,0 +1,151 @@
+package graphsearch;
+
+import ilist.Cons;
+import ilist.IList;
+import ilist.Nil;
+
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import maybe.Just;
+import maybe.Maybe;
+import maybe.Nothing;
+
+/**
+ * Class to perform a A* Search
+ */
+public class AStar<A> {
+	/**
+	 * A method to return whether you can find a node from a set start node or
+	 * not
+	 * 
+	 * @param origin
+	 *            The node you want to start from
+	 * @param destination
+	 *            Holds a node - tests whether equal to node you want to find
+	 * @return Maybe Type - Just or Nothing
+	 */
+	public Maybe<Node<A>> findNodeFrom(Node<A> origin, Node<A> destination,
+			Heuristic<A> h, Distance<A> d) {
+		Set<Node<A>> visited = new HashSet<Node<A>>();
+
+		PriorityQueue<Node<A>> pending = new PriorityQueue<Node<A>>();
+		pending.add(origin);
+
+		Map<Node<A>, Integer> D = new LinkedHashMap<Node<A>, Integer>();
+		D.put(origin, 0);
+
+		Map<Node<A>, Integer> f = new LinkedHashMap<Node<A>, Integer>();
+		f.put(origin, h.returnH());
+
+		while (!pending.isEmpty()) {
+
+			Node<A> node = pending.poll();
+
+			if (node.contentsEquals(destination.contents())) {
+				return new Just<Node<A>>(node);
+			}
+
+			visited.add(node);
+
+			for (Node<A> succ : node.successors()) {
+
+				int cost = D.get(node) + d.returnD();
+
+				if (!pending.contains(succ) || cost < D.get(succ)) {
+
+					D.put(succ, cost);
+					h = new Heuristic<A>(succ, destination);
+					f.put(succ, (D.get(succ) + h.returnH()));
+					succ.setValue(f.get(succ));
+					pending.add(succ);
+
+				}
+			}
+
+		}
+		return new Nothing<Node<A>>();
+
+	}
+
+	/**
+	 * A method to return a path from a set start node
+	 * 
+	 * @param origin
+	 *            The set start node
+	 * @param destination
+	 *            predicate Holds a node - tests whether equal to node you want
+	 *            to find
+	 * @param h
+	 *            The heuristic function
+	 * @param d
+	 *            The distance function
+	 * @return Maybe Type - Just or Nothing containing an iList of the path
+	 */
+	public Maybe<IList<Node<A>>> findPathFrom(Node<A> origin,
+			Node<A> destination, Heuristic<A> h, Distance<A> d) {
+
+		Set<Node<A>> visited = new HashSet<Node<A>>();
+
+		PriorityQueue<Node<A>> pending = new PriorityQueue<Node<A>>();
+		pending.add(origin);
+
+		Map<Node<A>, Node<A>> predecessor = new LinkedHashMap<Node<A>, Node<A>>();
+
+		Map<Node<A>, Integer> D = new LinkedHashMap<Node<A>, Integer>();
+		D.put(origin, 0);
+
+		Map<Node<A>, Integer> f = new LinkedHashMap<Node<A>, Integer>();
+		f.put(origin, h.returnH());
+
+		while (!pending.isEmpty()) {
+
+			Node<A> node = pending.poll();
+
+			if (node.contentsEquals(destination.contents())) {
+				return new Just<IList<Node<A>>>((mapToList(predecessor,
+						destination, origin)));
+			}
+
+			visited.add(node);
+
+			for (Node<A> succ : node.successors()) {
+				if (!visited.contains(succ)) {
+					d = new Distance<A>(node, succ);
+
+					int cost = D.get(node) + d.returnD();
+
+					// System.out.println((D.get(succ)));
+					if (!(pending.contains(succ)) || cost < D.get(succ)) {
+
+						predecessor.put(succ, node);
+						D.put(succ, cost);
+						h = new Heuristic<A>(succ, destination);
+						f.put(succ, (D.get(succ) + h.returnH()));
+						succ.setValue(f.get(succ));
+						if (!(pending.contains(succ))) {
+							pending.add(succ);
+						}
+
+					}
+				}
+
+			}
+
+		}
+		return new Nothing<IList<Node<A>>>();
+	}
+
+	public IList<Node<A>> mapToList(Map<Node<A>, Node<A>> traceable,
+			Node<A> endNode, Node<A> startNode) {
+		IList<Node<A>> route = new Cons<Node<A>>(endNode, new Nil<Node<A>>());
+		while (!startNode.contentsEquals(endNode.contents())) {
+			route = route.append(traceable.get(endNode));
+			endNode = traceable.get(endNode);
+		}
+		return route.reverse();
+
+	}
+
+}

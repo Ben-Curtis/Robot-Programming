@@ -1,0 +1,49 @@
+package robotsearch;
+
+import lejos.nxt.Button;
+import lejos.robotics.navigation.DifferentialPilot;
+
+public class PathFinding extends RobotProgrammingDemo {
+	
+	private DifferentialPilot pilot;
+	private boolean d = false;
+	private int i = 1;
+	
+	public void left(WheeledRobotSystem m_robot) {
+
+		pilot.stop();
+		pilot.setTravelSpeed(60.0);
+		pilot.travel(80.0);
+		pilot.rotate(90.0);
+		i = i + 1;
+		d = false;
+	}
+
+	public void right() {
+
+		pilot.stop();
+		pilot.setTravelSpeed(60.0);
+		pilot.travel(80.0);
+		pilot.rotate(-90.0);
+		i = i + 1;
+		d = false;
+	}
+
+	public void forwards() {
+
+		pilot.setTravelSpeed(60.0);
+		pilot.travel(80.0);
+		i = i + 1;
+		d = false;
+	}
+
+	public static void main(String[] args) {
+
+		System.out.println("Hello World!");
+		Button.waitForAnyPress();
+		WheeledRobotSystem robot = new WheeledRobotSystem(
+				RobotConfigs.EXPRESS_BOT);
+		RobotProgrammingDemo demo = new partTwo(robot);
+		demo.run();
+	}
+}

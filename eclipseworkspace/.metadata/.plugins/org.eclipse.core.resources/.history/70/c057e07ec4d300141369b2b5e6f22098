@@ -1,0 +1,129 @@
+package mapstuff;
+
+import graphsearch.Coordinate;
+import graphsearch.Holds;
+import graphsearch.Node;
+import graphsearch.depthFirst;
+
+import java.util.ArrayList;
+
+import rp.robotics.mapping.MapUtils;
+import rp.robotics.mapping.RPLineMap;
+
+public class Graph<A> {
+
+	private ArrayList<Node<A>> nodes;
+	private gridMap gridMap;
+	
+	public Graph(RPLineMap lineMap, gridMap gridMap) {
+
+		MapUtils.create2015Map1();
+		this.gridMap = new gridMap(8, 12, 15, 15, 30, lineMap);
+		nodes = new ArrayList<Node<A>>();
+//		ArrayList<A> coords = createCoordinates(blocked);
+
+		
+
+//		addSuccessors(nodes);
+
+	}
+
+	public ArrayList<Coordinate> createCoordinates() {
+
+		ArrayList<Coordinate> coords = new ArrayList<Coordinate>();
+
+		for (int i = 0; i < gridMap.getYSize(); i++) {
+			for (int j = 0; j < gridMap.getXSize(); j++) {
+				if (gridMap.isObstructed(i, j) == false) {
+
+					Coordinate c = new Coordinate(i, j);
+					coords.add(c);
+				}
+			}
+		}
+		return coords;
+	}
+	public ArrayList<Node<A>> createNodes(ArrayList<A> coords) {
+		//Graph<Coordinate> graph = new Graph<Coordinate>(lineMap, gridMap);
+	
+		for (int i = 0; i < coords.size(); i++) {
+			Node<A> s = this.nodeWith(coords.get(i));
+			//Node s = this.nodeWith((A) coords.get(i));
+			nodes.add(s);
+
+		}
+		return nodes;
+	}
+
+	public Node<A> nodeWith(A c) {
+		for (int i = 0; i < nodes.size(); i++) { // Inefficient for large graph.
+			Node<A> node = nodes.get(i);
+			if (node.contentsEquals(c))
+				return node; // Found.
+		}
+		// Not found, hence create it:
+		Node<A> node = new Node<A>(c);
+		nodes.add(node);
+		return node;
+	}
+
+	public static void main(String[] args) {
+
+		RPLineMap lineMap = MapUtils.create2015Map1();
+		gridMap gridMap = new gridMap(8, 12, 15, 15, 30, lineMap);
+
+		Graph<Coordinate> graph = new Graph<Coordinate>(lineMap, gridMap);
+		ArrayList<Coordinate> coords = graph.createCoordinates();
+		//System.out.println(coords.size());
+		ArrayList<Node<Coordinate>> nodes = graph.createNodes(coords);
+		
+		for (int i = 0; i < nodes.size(); i++) {
+			System.out.println(i);
+			Node<Coordinate> n = (Node<Coordinate>) nodes.get(i);
+			Coordinate c = n.contents();
+			int x1 = ((Coordinate) c).getX();
+			int y1 = ((Coordinate) c).getY();
+			//System.out.println(x1 +", " +y1);
+			int x2 = x1 + 1;
+			int y2 = y1 + 1;
+			
+			int x3 = x1 - 1;
+			int y3 = y1 - 1;
+			
+			if (gridMap.isValidTransition(x1, y1, x1, y2) == true) {
+				Coordinate p = new Coordinate (x1, y2);
+				Node<Coordinate> s = graph.nodeWith(p);
+				n.addSuccessor(s);
+			}
+			
+			if (gridMap.isValidTransition(x1, y1, x2, y1) == true) {
+				Coordinate p = new Coordinate (x2, y1);
+				Node<Coordinate> s = graph.nodeWith(p);
+				n.addSuccessor(s);
+			}
+
+			if (gridMap.isValidTransition(x1, y1, x1, y3) == true) {
+				Coordinate p = new Coordinate (x1, y3);
+				Node<Coordinate> s = graph.nodeWith(p);
+				n.addSuccessor(s);
+			}
+			
+			if (gridMap.isValidTransition(x1, y1, x3, y1) == true) {
+				Coordinate p = new Coordinate (x3, y1);
+				Node<Coordinate> s = graph.nodeWith(p);
+				n.addSuccessor(s);
+			}
+		}
+		Node<Coordinate> startNode = graph.nodeWith(new Coordinate(0, 0));
+
+		Node<Coordinate> findNode = graph.nodeWith(new Coordinate(5, 3));
+		Holds<Coordinate> h = new Holds<Coordinate>(findNode);
+
+		depthFirst<Coordinate> depthfirst = new depthFirst<Coordinate>();
+
+		System.out.println("Depth First Search: "
+				+ depthfirst.findPathFrom(startNode, h));
+	}
+}
+
+

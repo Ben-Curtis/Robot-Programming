@@ -1,0 +1,185 @@
+package graphsearch;
+
+import java.util.Set;
+
+/**
+ * A class to create a graph that stores a set of nodes
+ */
+
+public class Graph<A> {
+
+	// Keep the implementation of sets open, by using the Set interface:
+	private Set<Node<A>> nodes;
+
+	/**
+	 * A constructor to make an empty graph
+	 */
+	public Graph() {
+		// Choose any implementation of sets you please, but you need to
+		// choose one.
+		nodes = new LinkedHashSet<Node<A>>();
+	}
+
+	/**
+	 * Get method to get the nodes in a graph
+	 * @return nodes The nodes in the graph
+	 */
+	public Set<Node<A>> nodes() {
+		return nodes;
+	}
+
+	/**
+	 * A method that finds or else creates a node with a given contents 'c'.
+	 * @param c The contents we want to find or create of a node
+	 * @return node The node that we either found or created 
+	 */
+	public Node<A> nodeWith(A c) {
+		for (Node<A> node : nodes) { // Inefficient for large graph.
+			if (node.contentsEquals(c))
+				return node; // Found.
+		}
+		// Not found, hence create it:
+		Node<A> node = new Node<A>(c);
+		nodes.add(node);
+		return node;
+	}
+
+	// Builds sample graph for testing:
+	public static <A> void main(String args[]) {
+
+		int[][] nick = { { 0, 0, 1, 0, 0, 1 }, { 0, 1, 0, 0, 1, 1, 0, 2 },
+				{ 0, 2, 0, 3, 0, 1 }, { 0, 3, 0, 2, 0, 4 },
+				{ 0, 4, 0, 3, 0, 5 }, { 0, 5, 0, 6, 1, 5, 0, 4 },
+				{ 0, 6, 1, 6, 0, 5 }, { 1, 0, 0, 0, 1, 1, 2, 0 },
+				{ 1, 1, 1, 2, 2, 1, 1, 0, 0, 1 }, { 1, 2, 2, 2, 1, 1, 1, 3 },
+				{ 1, 3, 1, 2, 1, 4, 2, 3 }, { 1, 4, 2, 4, 1, 5, 1, 3 },
+				{ 1, 5, 1, 4, 2, 5, 1, 6, 0, 5 }, { 1, 6, 0, 6, 1, 5, 2, 6 },
+				{ 2, 0, 3, 0, 2, 1, 1, 0 }, { 2, 1, 2, 2, 1, 1, 2, 0, 3, 1 },
+				{ 2, 2, 1, 2, 2, 1, 2, 3, 3, 2 },
+				{ 2, 3, 2, 2, 2, 4, 3, 3, 1, 3 },
+				{ 2, 4, 1, 4, 2, 5, 2, 3, 3, 4 },
+				{ 2, 5, 2, 4, 1, 5, 2, 6, 3, 5 }, { 2, 6, 3, 6, 2, 5, 1, 6 },
+				{ 3, 0, 2, 0, 3, 1 }, { 3, 1, 3, 0, 4, 1, 2, 1, 3, 2 },
+				{ 3, 2, 2, 2, 4, 2, 3, 1 }, { 3, 3, 2, 3, 3, 4 },
+				{ 3, 4, 2, 4, 3, 3 }, { 3, 5, 3, 6, 2, 5, 4, 5 },
+				{ 3, 6, 2, 6, 3, 5 }, { 4, 0 }, { 4, 1, 4, 2, 5, 1, 3, 1 },
+				{ 4, 2, 4, 1, 5, 2, 3, 2 }, { 4, 3 }, { 4, 4 },
+				{ 4, 5, 5, 5, 3, 5 }, { 4, 6 }, { 5, 0 },
+				{ 5, 1, 4, 1, 5, 2, 6, 1 }, { 5, 2, 4, 2, 5, 1, 6, 2 },
+				{ 5, 3 }, { 5, 4 }, { 5, 5, 4, 5, 6, 5 }, { 5, 6 },
+				{ 6, 0, 7, 0, 6, 1 }, { 6, 1, 6, 0, 5, 1, 6, 2, 7, 1 },
+				{ 6, 2, 5, 2, 6, 1, 7, 2 }, { 6, 3, 7, 3, 6, 4 },
+				{ 6, 4, 6, 3, 7, 4 }, { 6, 5, 5, 5, 6, 6, 7, 5 },
+				{ 6, 6, 7, 6, 6, 5 }, { 7, 0, 6, 0, 7, 1, 8, 0 },
+				{ 7, 1, 8, 1, 7, 0, 6, 1, 7, 2 },
+				{ 7, 2, 7, 3, 8, 2, 6, 2, 7, 1 },
+				{ 7, 3, 6, 3, 7, 2, 7, 4, 8, 3 },
+				{ 7, 4, 7, 3, 8, 4, 6, 4, 7, 5 },
+				{ 7, 5, 8, 5, 7, 6, 7, 4, 6, 5 }, { 7, 6, 6, 6, 7, 5, 8, 6 },
+				{ 8, 0, 8, 1, 7, 0, 9, 0 }, { 8, 1, 8, 2, 9, 1, 7, 1, 8, 0 },
+				{ 8, 2, 8, 1, 7, 2, 8, 3 }, { 8, 3, 8, 2, 7, 3, 8, 4 },
+				{ 8, 4, 8, 5, 8, 3, 7, 4 }, { 8, 5, 9, 5, 8, 4, 7, 5, 8, 6 },
+				{ 8, 6, 8, 5, 7, 6, 9, 6 }, { 9, 0, 9, 1, 8, 0 },
+				{ 9, 1, 8, 1, 9, 2, 9, 0 }, { 9, 2, 9, 1, 9, 3 },
+				{ 9, 3, 9, 2, 9, 4 }, { 9, 4, 9, 5, 9, 3 },
+				{ 9, 5, 8, 5, 9, 4, 9, 6 }, { 9, 6, 9, 5, 8, 6 } };
+
+		Graph<Coordinate> nicksGraph = new Graph<Coordinate>();
+
+		for (int i = 0; i < nick.length; i++) {
+			// What we are going to do relies on the two following facts
+			// about nick:
+			assert (nick[i].length >= 2); // (1)
+			assert (nick[i].length % 2 == 0); // (2)
+
+			int x = nick[i][0]; // Can't get array out of bounds
+			int y = nick[i][1]; // because of assertion (1).
+			Coordinate c = new Coordinate(x, y);
+			Node<Coordinate> node = nicksGraph.nodeWith(c);
+
+			// And next we add its successors. We rely on assertion (2)
+			// again to avoid array out of bounds. Now we start from
+			// position 2, as positions 0 and 1 have already been looked at
+			// (they are x and y). Notice that we need to increment by 2.
+
+			for (int j = 2; j < nick[i].length; j = j + 2) {
+				int sx = nick[i][j];
+				int sy = nick[i][j + 1];
+				Coordinate sc = new Coordinate(sx, sy);
+				Node<Coordinate> s = nicksGraph.nodeWith(sc);
+				node.addSuccessor(s);
+			}
+			
+		
+			
+		
+		}
+		
+		AStar<A> as = new AStar<A>();
+		
+		//From a node to a connected node
+		Node startNode1 = nicksGraph.nodeWith(new Coordinate(0, 1));
+		Node findNode1 = nicksGraph.nodeWith(new Coordinate(0, 3));
+		Heuristic h = new Heuristic(startNode1, findNode1);
+		Distance d = new Distance<A>(startNode1, findNode1);
+		
+		System.out.println("A* Search: " + as.findNodeFrom(startNode1, findNode1, h, d));
+		
+		System.out.println("A* Search Path: " + as.findPathFrom(startNode1, findNode1, h, d));
+	
+		System.out.println();
+	
+		//From a node to a connected node
+		Node startNode2 = nicksGraph.nodeWith(new Coordinate(0, 0));
+		Node findNode2 = nicksGraph.nodeWith(new Coordinate(5, 2));
+		Heuristic h2 = new Heuristic(startNode2, findNode2);
+		Distance<A> d2 = new Distance<A>(startNode2, findNode2);
+		
+		System.out.println("A* Search: " + as.findNodeFrom(startNode2, findNode2, h2, d2));
+		
+		System.out.println("A* Search Path: " + as.findPathFrom(startNode2, findNode2, h2, d2));
+	
+		System.out.println();
+		
+		//From a node with no successors to a node
+		Node startNode3 = nicksGraph.nodeWith(new Coordinate(5, 4));
+		Node findNode3 = nicksGraph.nodeWith(new Coordinate(6, 2));
+		Heuristic h3 = new Heuristic(startNode3, findNode3);
+		Distance<A> d3 = new Distance<A>(startNode3, findNode3);
+		
+		System.out.println("A* Search: " + as.findNodeFrom(startNode3, findNode3, h3, d3));
+		
+		System.out.println("A* Search Path: " + as.findPathFrom(startNode3, findNode3, h3, d3));
+	
+		System.out.println();
+		
+		//From a node to a node that doesn't exist
+		Node startNode4 = nicksGraph.nodeWith(new Coordinate(5, 4));
+		Node findNode4 = nicksGraph.nodeWith(new Coordinate(9, 8));
+		Heuristic h4 = new Heuristic(startNode4, findNode4);
+		Distance<A> d4 = new Distance<A>(startNode4, findNode4);
+		
+		System.out.println("A* Search: " + as.findNodeFrom(startNode4, findNode4, h4, d4));
+		
+		System.out.println("A* Search Path: " + as.findPathFrom(startNode4, findNode4, h4, d4));
+	
+		System.out.println();
+		
+		//From a node to a connected node 
+		Node startNode5 = nicksGraph.nodeWith(new Coordinate(0, 0));
+		Node findNode5 = nicksGraph.nodeWith(new Coordinate(6, 4));
+		Heuristic h5 = new Heuristic(startNode5, findNode5);
+		Distance<A> d5 = new Distance<A>(startNode5, findNode5);
+		
+		System.out.println("A* Search: " + as.findNodeFrom(startNode5, findNode5, h5, d5));
+		
+		System.out.println("A* Search Path: " + as.findPathFrom(startNode5, findNode5, h5, d5));
+	
+		System.out.println();
+	
+
+			
+	
+	}
+	
+}

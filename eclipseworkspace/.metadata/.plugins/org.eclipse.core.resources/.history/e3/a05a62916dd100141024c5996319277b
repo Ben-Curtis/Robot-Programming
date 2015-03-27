@@ -1,0 +1,104 @@
+package mapstuff;
+
+import lejos.geom.Line;
+import lejos.geom.Point;
+import lejos.robotics.navigation.Pose;
+import rp.robotics.mapping.IGridMap;
+import rp.robotics.mapping.RPLineMap;
+
+public class gridMap implements IGridMap {
+	private int gridYSize;
+	private int gridXSize;
+	private float cellSize;
+	private RPLineMap lineMap;
+	private float xStart;
+	private float yStart;
+
+	public gridMap(int gridXSize, int gridYSize, float xStart, float yStart,
+			float cellSize, RPLineMap lineMap) {
+		this.lineMap = lineMap;
+		this.gridXSize = gridXSize;
+		this.gridYSize = gridYSize;
+		this.cellSize = cellSize;
+		this.xStart = xStart;
+		this.yStart = yStart;
+	}
+
+	@Override
+	public int getXSize() {
+		// TODO Auto-generated method stub
+		return gridXSize;
+	}
+
+	@Override
+	public int getYSize() {
+		// TODO Auto-generated method stub
+		return gridYSize;
+	}
+
+	@Override
+	public boolean isValidGridPosition(int _x, int _y) {
+		// TODO Auto-generated method stub
+
+		if (_x < getXSize() && _y < getYSize()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	@Override
+	public boolean isObstructed(int _x, int _y) {
+		// TODO Auto-generated method stub
+		Point p = getCoordinatesOfGridPosition(_x, _y);
+		if (lineMap.inside(p) == true) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	@Override
+	public Point getCoordinatesOfGridPosition(int _x, int _y) {
+		float xCoord = (_x * cellSize) + xStart;
+		float yCoord = (_y * cellSize) + yStart;
+		// TODO Auto-generated method stub
+		return new Point(xCoord, yCoord);
+	}
+
+	public static boolean isValidTransition(int _x1, int _y1, int _x2, int _y2) {
+		// TODO Auto-generated method stub
+
+		Line[] lines = lineMap.getLines();
+
+		Point one = getCoordinatesOfGridPosition(_x1, _y1);
+		Point two = getCoordinatesOfGridPosition(_x2, _y2);
+
+		Line line = new Line((float) one.getX(), (float) one.getY(),
+				(float) two.getX(), (float) two.getY());
+
+		if (isObstructed(_x1, _y1) == false && isObstructed(_x2, _y2) == false) {
+
+			for (int i = 0; i < lines.length; i++) {
+
+				Point intersect1 = lineMap.intersectsAt(lines[i], line);
+				if (intersect1 != null) {
+					return false;
+				}
+			}
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public float rangeToObstacleFromGridPosition(int _x, int _y, float _heading) {
+		// TODO Auto-generated method stub
+		Point point = getCoordinatesOfGridPosition(_x, _y);
+		float x = (float) point.getX();
+		float y = (float) point.getY();
+
+		Pose pose = new Pose(x, y, _heading);
+		return lineMap.range(pose);
+	}
+}

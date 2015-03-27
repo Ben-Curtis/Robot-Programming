@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.lejos.nxt.ldt.LEJOS_LIBRARY_CONTAINER/nxt"/>
+	<classpathentry kind="lib" path="C:/Users/Ben/Documents/Uni/Computer Science Year 1/Semester 2/Robot Programming/eclipseworkspace/rp14-exercise4/lib/rp14-solutions.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/rp14-exercise4"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

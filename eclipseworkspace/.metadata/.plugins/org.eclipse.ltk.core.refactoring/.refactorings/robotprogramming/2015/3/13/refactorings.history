@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy 3 packages to &apos;robotsearch/src/graphsearch&apos;&#x0D;&#x0A;- Original project: &apos;robotprogramming&apos;&#x0D;&#x0A;- Destination element: &apos;robotsearch/src/graphsearch&apos;&#x0D;&#x0A;- Original elements:&#x0D;&#x0A;     robotprogramming/src/rp.config&#x0D;&#x0A;     robotprogramming/src/rp.util&#x0D;&#x0A;     robotprogramming/src/rp.systems" description="Copy packages" destination="=robotsearch/src&lt;graphsearch" element1="/src&lt;rp.config" element2="/src&lt;rp.util" element3="/src&lt;rp.systems" flags="589830" fragments="3" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyPackages" stamp="1427457036170" version="1.0"/>
+</session>

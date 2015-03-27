@@ -1,0 +1,117 @@
+package mapstuff;
+
+import graphsearch.AStar;
+import graphsearch.Coordinate;
+import graphsearch.Distance;
+import graphsearch.Heuristic;
+import graphsearch.Node;
+
+import java.util.ArrayList;
+
+import rp.robotics.mapping.MapUtils;
+import rp.robotics.mapping.RPLineMap;
+
+public class Graph<A> {
+
+	private ArrayList<Node<A>> nodes;
+	private gridMap gridMap;
+	
+	public Graph(RPLineMap lineMap, gridMap gridMap) {
+
+		MapUtils.create2015Map1();
+		this.gridMap = new gridMap(8, 12, 15, 15, 30, lineMap);
+		nodes = new ArrayList<Node<A>>();
+//		ArrayList<A> coords = createCoordinates(blocked);
+
+		
+
+//		addSuccessors(nodes);
+
+	}
+
+	public ArrayList<Coordinate> createCoordinates() {
+
+		ArrayList<Coordinate> coords = new ArrayList<Coordinate>();
+
+		for (int i = 0; i < gridMap.getYSize(); i++) {
+			for (int j = 0; j < gridMap.getXSize(); j++) {
+				if (gridMap.isObstructed(i, j) == false) {
+
+					Coordinate c = new Coordinate(i, j);
+					coords.add(c);
+				}
+			}
+		}
+		return coords;
+	}
+	public ArrayList<Node<A>> createNodes(ArrayList<A> coords) {
+		//Graph<Coordinate> graph = new Graph<Coordinate>(lineMap, gridMap);
+	
+		for (int i = 0; i < coords.size(); i++) {
+			Node<A> s = this.nodeWith(coords.get(i));
+			//Node s = this.nodeWith((A) coords.get(i));
+			nodes.add(s);
+
+		}
+		return nodes;
+	}
+
+	public void addSuccessors(ArrayList<Node<A>> nodes) {
+
+		for (int i = 0; i < nodes.size(); i++) {
+			Node<A> n = nodes.get(i);
+			A c = n.contents();
+			int x1 = ((Coordinate) c).getX();
+			System.out.println(x1);
+
+			int y1 = ((Coordinate) c).getY();
+			for (int j = 0; j < nodes.size(); j++) {
+				Node<A> l = nodes.get(j);
+				A m = l.contents();
+				int x2 = ((Coordinate) m).getX();
+				//System.out.println(x2);
+				int y2 = ((Coordinate) m).getY();
+				//if((x2 - x1 == -1) || (x2 - x1 == 1) || (y2 - y1 == -1) || (y2 - y1 == 1)) {
+					if (gridMap.isValidTransition(x1, y1, x2, y2) == true) {
+						n.addSuccessor(l);
+					}
+			//	}
+			}
+		}
+	}
+
+	public Node<A> nodeWith(A c) {
+		for (int i = 0; i < nodes.size(); i++) { // Inefficient for large graph.
+			Node<A> node = nodes.get(i);
+			if (node.contentsEquals(c))
+				return node; // Found.
+		}
+		// Not found, hence create it:
+		Node<A> node = new Node<A>(c);
+		nodes.add(node);
+		return node;
+	}
+
+	public static void main(String[] args) {
+
+		RPLineMap lineMap = MapUtils.create2015Map1();
+		gridMap gridMap = new gridMap(8, 12, 15, 15, 30, lineMap);
+
+		Graph<Coordinate> graph = new Graph<Coordinate>(lineMap, gridMap);
+		ArrayList<Coordinate> coords = graph.createCoordinates();
+		//System.out.println(coords.size());
+		graph.addSuccessors(graph.createNodes(coords));
+		
+		Node<Coordinate> startNode = graph.nodeWith(new Coordinate(4, 4));
+		Node<Coordinate> findNode = graph.nodeWith(new Coordinate(2, 3));
+		Heuristic<Coordinate> h = new Heuristic<Coordinate>(startNode, findNode);
+		Distance<Coordinate> d = new Distance<Coordinate>(startNode, findNode);
+
+		AStar<Coordinate> aStar = new AStar<Coordinate>();
+
+		System.out.println("A* Search: "
+				+ aStar.findPathFrom(startNode, findNode, h, d));
+	}
+}
+
+

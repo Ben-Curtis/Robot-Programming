@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy element &apos;GridMapTest.java&apos; to &apos;exercise4/src/mapstuff&apos;&#x0D;&#x0A;- Original project: &apos;rp14-exercise4&apos;&#x0D;&#x0A;- Destination element: &apos;exercise4/src/mapstuff&apos;&#x0D;&#x0A;- Original element: &apos;rp.robotics.mapping.GridMapTest.java&apos;" description="Copy compilation unit" destination="=exercise4/src&lt;mapstuff" element1="/src-test&lt;rp.robotics.mapping{GridMapTest.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1426596326125" units="1" version="1.0"/>
+</session>

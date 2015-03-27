@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="javax.swing.JFrame"/>
+<fullyQualifiedTypeName name="lejos.robotics.navigation.Pose"/>
+<fullyQualifiedTypeName name="lejos.robotics.mapping.LineMap"/>
+<fullyQualifiedTypeName name="lejos.geom.Rectangle"/>
+<fullyQualifiedTypeName name="rp.robotics.mapping.Heading"/>
+<fullyQualifiedTypeName name="lejos.geom.Line"/>
+<fullyQualifiedTypeName name="rp.robotics.mapping.RPLineMap"/>
+<fullyQualifiedTypeName name="rp.robotics.mapping.IGridMap"/>
+<fullyQualifiedTypeName name="java.lang.reflect.Array"/>
+<fullyQualifiedTypeName name="lejos.geom.Point"/>
+<fullyQualifiedTypeName name="rp.robotics.visualisation.GridMapVisualisation"/>
+<fullyQualifiedTypeName name="rp.robotics.visualisation.KillMeNow"/>
+<fullyQualifiedTypeName name="rp.robotics.mapping.MapUtils"/>
+<fullyQualifiedTypeName name="mapstuff.gridMap"/>
+<fullyQualifiedTypeName name="ilist.IList"/>
+<fullyQualifiedTypeName name="maybe.Maybe"/>
+<fullyQualifiedTypeName name="java.util.Random"/>
+<fullyQualifiedTypeName name="maybe.Just"/>
+<fullyQualifiedTypeName name="maybe.Nothing"/>
+<fullyQualifiedTypeName name="graphsearch.AStar"/>
+<fullyQualifiedTypeName name="graphsearch.Distance"/>
+<fullyQualifiedTypeName name="graphsearch.Node"/>
+<fullyQualifiedTypeName name="graphsearch.Coordinate"/>
+<fullyQualifiedTypeName name="graphsearch.Heuristic"/>
+<fullyQualifiedTypeName name="graphsearch.depthFirst"/>
+<fullyQualifiedTypeName name="graphsearch.Holds"/>
+<fullyQualifiedTypeName name="java.util.ArrayList"/>
+<fullyQualifiedTypeName name="java.util.HashSet"/>
+<fullyQualifiedTypeName name="java.util.HashMap"/>
+</qualifiedTypeNameHistroy>
